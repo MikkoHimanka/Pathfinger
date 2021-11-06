@@ -1,5 +1,18 @@
 # Pathfinger
 
+Asenna ensin riippuvuudet:
+
+```
+pip install PyQt6
+```
+
+Suorita sovellus komennolla:
+```
+python3 src/pathfinger.py
+```
+
+---
+
 [Määrittelydokumentti](docs/maarittely.md)
 
 ## Viikkoraportit
