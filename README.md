@@ -17,6 +17,7 @@ python3 src/pathfinger.py
 
 ## Viikkoraportit
 * [Viikkoraportti 1](docs/viikkoraportti1.md)
+* [Viikkoraportti 2](docs/viikkoraportti2.md)
 
 Projektissa käytetyt ikonit:
 

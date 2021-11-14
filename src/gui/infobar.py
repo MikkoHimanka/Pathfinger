@@ -1,7 +1,9 @@
 from PyQt6.QtWidgets import QLabel
 from PyQt6.QtGui import QPalette, QColor
 
-class InfoBar(QLabel):
+class Infobar(QLabel):
+    '''Kayttoliittymaluokka infopalkkia varten'''
+
     def __init__(self):
         super().__init__()
         self.message_palette = self.palette()
@@ -15,9 +17,13 @@ class InfoBar(QLabel):
         self.setMessage("Ready")
 
     def setWarning(self, text):
+        '''Asettaa palkkiin annetun tekstin punaisella'''
+
         self.setPalette(self.warning_palette)
         self.setText(text)
 
     def setMessage(self, text):
+        '''Asettaa palkkiin annetun tekstin valkoisella'''
+
         self.setPalette(self.message_palette)
         self.setText(text)

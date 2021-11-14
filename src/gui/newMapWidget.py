@@ -2,6 +2,8 @@ from PyQt6.QtWidgets import QPushButton, QWidget, QLabel, QLineEdit, QVBoxLayout
 from PyQt6.QtCore import Qt
 
 class NewMapWidget(QWidget):
+    '''Kayttoliittymaluokka uuden kartan luomiseen'''
+
     def __init__(self, infobar, parent):
         super().__init__()
         self.parent = parent
@@ -37,6 +39,8 @@ class NewMapWidget(QWidget):
         self.setLayout(vertical_layout)
 
     def parseSize(self, text):
+        '''Tarkistaa etta annettu koko on hyva numeerinen arvo ja kytkee "Create"-napin paalle tai pois'''
+
         try:
             value = int(text)
             if value < 8 or value > 256:
@@ -49,5 +53,7 @@ class NewMapWidget(QWidget):
             self.infobar.setWarning("A map must be in range of 8-256")
 
     def createMap(self):
-        self.parent.createMap(int(self.x_field.text()))
+        '''Luo uuden kartan'''
+
+        self.parent.createMap(int(self.x_field.text()), int(self.y_field.text()))
         

@@ -1,13 +1,17 @@
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 from PyQt6.QtGui import QAction, QIcon
 
-from gui.infobar import InfoBar
+from gui.infobar import Infobar
+from gui.mapEditor import MapEditor
 from gui.newMapWidget import NewMapWidget
-from gui.mapPainter import MapPainter
+from gui.pathViewer import PathViewer
 
 class MainWindow(QMainWindow):
+    '''Kayttoliittymaluokka ikkunan hallintaan'''
+
     def __init__(self):
         super().__init__()
+        self.show_editor = True
         self.setWindowTitle("Pathfinger")
         self.setMinimumWidth(700)
         self.setMinimumHeight(600)
@@ -18,14 +22,16 @@ class MainWindow(QMainWindow):
         self.parentLayOut.setContentsMargins(0,0,0,0)
         self.parentLayOut.setSpacing(0)
 
-        infobar = InfoBar()
+        infobar = Infobar()
         infobar.setAutoFillBackground(True)
         infobar.setFixedHeight(20)
         infobar.setContentsMargins(10, 0, 0, 0)
+        
+        self.editor_widget = MapEditor(infobar, 'assets/maps/map1.csv')
+        #self.path_widget = PathViewer(infobar)
 
-        self.new_map_widget = NewMapWidget(infobar, self)
+        self.parentLayOut.addWidget(self.editor_widget)
 
-        self.parentLayOut.addWidget(self.new_map_widget)
         self.parentLayOut.addWidget(infobar)
 
         main_widget = QWidget()
@@ -33,6 +39,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(main_widget)
 
     def initMenuBar(self):
+        '''Alustaa sovelluksen ylapalkin'''
+
         menu = self.menuBar()
         file_tab = menu.addMenu("File")
 
@@ -45,10 +53,18 @@ class MainWindow(QMainWindow):
         file_tab.addSeparator()
         file_tab.addAction(quit_app_action)
 
-    def createMap(self, size):
-        new_map = MapPainter() 
-        self.parentLayOut.replaceWidget(self.new_map_widget, new_map)
+    def createMap(self, width, height):
+        pass
         
-        self.new_map_widget.close()
-        del self.new_map_widget
+
+    def showEditor(self):
+        '''Vaihtaa nakymaksi karttaeditorin'''
+
+        if not self.show_editor:
+            self.layout.replaceWidget(self.path_widget, self.editor_widget)
+    
+    def showPathView(self):
+        '''Vaihtaa nakymaksi polunetsinnan'''
         
+        if self.show_editor:
+            self.layout.replaceWidget(self.editor_widget, self.path_widget)
