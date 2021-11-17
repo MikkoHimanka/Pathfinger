@@ -5,21 +5,14 @@ from utils.CSVManager import CSVManager
 class MapEditor(MapEntity):
     '''Kayttoliittymaluokka kartan piirtamista varten'''
 
-    def __init__(self, infobar, filename):
-        super().__init__(infobar, self.loadMap(filename))
+    def __init__(self, gui_manager, data_manager):
+        super().__init__(gui_manager, data_manager)
         self.brush = ''
-
-    def unscalePosition(self, position):
-        '''Palauttaa vastaavat koordinaatit skaalaamattomalla kuvalla'''
-
-        position[0] = int(position[0]/(self.width()/self.map_length))
-        position[1] = int(position[1]/(self.width()/self.map_length))
-        return position
 
     def mouseMoveEvent(self, e):
         '''Asettaa pensselin arvoksi vastakkaisen kartan arvon ('0' -> '1' / '1' -> '0') ja asettaa sen listaan'''
 
-        position = self.unscalePosition([e.position().x(), e.position().y()])
+        position = self.unscalePosition((e.position().x(), e.position().y()))
 
         if (position[0] < self.map_length and position[1] < self.map_length
             and position[0] >= 0 and position[1] >= 0):
@@ -39,20 +32,3 @@ class MapEditor(MapEntity):
         self.scalePixmap(self.pixmap)   
 
         self.brush = ''
-
-    def loadMap(self, name):
-        '''Lataa yksiulotteisen kartan tiedostosta'''
-
-        file_manager = CSVManager()
-        try:
-            arr = file_manager.openFile(name)
-        except FileNotFoundError:
-            self.infobar.setWarning('File not found')
-            arr = []
-
-        return arr
-        
-
-
-
-        

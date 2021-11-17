@@ -4,11 +4,11 @@ from PyQt6.QtCore import Qt
 class NewMapWidget(QWidget):
     '''Kayttoliittymaluokka uuden kartan luomiseen'''
 
-    def __init__(self, infobar, parent):
+    def __init__(self, parent):
         super().__init__()
         self.parent = parent
         self.is_square = True
-        self.infobar = infobar
+        self.infobar = parent.infobar
         self.x_field = QLineEdit()
         self.y_field = QLineEdit()
 
@@ -55,5 +55,5 @@ class NewMapWidget(QWidget):
     def createMap(self):
         '''Luo uuden kartan'''
 
-        self.parent.createMap(int(self.x_field.text()), int(self.y_field.text()))
+        self.parent.create_map(int(self.x_field.text()), int(self.y_field.text()))
         

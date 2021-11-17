@@ -1,6 +1,5 @@
 import csv
 from math import sqrt
-from os import error, read
 
 class CSVManager():
     '''Luokka csv-tiedostojen kasittelyyn'''
@@ -18,15 +17,20 @@ class CSVManager():
         
     def openFile(self, name):
         '''Avaa csv-muotoisen tiedoston ja palauttaa sen yksiuloitteisena list-rakenteena'''
+        
+        result = []
         try:
             with open(name, newline='') as file:
-                try:
                     reader = csv.reader(file)
-                    result = []
                     for row in reader:
                         result += row
-                    return result
-                except:
-                    raise FileNotFoundError
-        except FileNotFoundError:
-            raise
+        except:
+            raise FileNotFoundError("File not found")
+
+        try:
+            for elem in result:
+                int(elem)
+        except:
+            raise ValueError("File contains invalid values")
+
+        return result

@@ -1,41 +1,24 @@
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QFileDialog, QMainWindow, QWidget
 from PyQt6.QtGui import QAction, QIcon
 
-from gui.infobar import Infobar
-from gui.mapEditor import MapEditor
 from gui.newMapWidget import NewMapWidget
-from gui.pathViewer import PathViewer
+from utils.dataManager import DataManager
+from utils.guiManager import GUIManager
 
 class MainWindow(QMainWindow):
     '''Kayttoliittymaluokka ikkunan hallintaan'''
 
     def __init__(self):
         super().__init__()
-        self.show_editor = True
+        self.gui_manager = GUIManager()
+        self.data_manager = DataManager()
         self.setWindowTitle("Pathfinger")
         self.setMinimumWidth(700)
         self.setMinimumHeight(600)
-
         self.initMenuBar()
 
-        self.parentLayOut = QVBoxLayout()
-        self.parentLayOut.setContentsMargins(0,0,0,0)
-        self.parentLayOut.setSpacing(0)
-
-        infobar = Infobar()
-        infobar.setAutoFillBackground(True)
-        infobar.setFixedHeight(20)
-        infobar.setContentsMargins(10, 0, 0, 0)
-        
-        self.editor_widget = MapEditor(infobar, 'assets/maps/map1.csv')
-        #self.path_widget = PathViewer(infobar)
-
-        self.parentLayOut.addWidget(self.editor_widget)
-
-        self.parentLayOut.addWidget(infobar)
-
         main_widget = QWidget()
-        main_widget.setLayout(self.parentLayOut)
+        main_widget.setLayout(self.gui_manager.layout)
         self.setCentralWidget(main_widget)
 
     def initMenuBar(self):
@@ -45,7 +28,11 @@ class MainWindow(QMainWindow):
         file_tab = menu.addMenu("File")
 
         new_file_action = QAction(QIcon("assets/icons/icons8-new-file-16.png"), "New map", self)
+        new_file_action.triggered.connect(self.showNewMapDialog)
+
         open_file_action = QAction("Open map", self)
+        open_file_action.triggered.connect(self.showOpenMapDialog)
+
         quit_app_action = QAction("Quit", self)
 
         file_tab.addAction(new_file_action)
@@ -53,9 +40,17 @@ class MainWindow(QMainWindow):
         file_tab.addSeparator()
         file_tab.addAction(quit_app_action)
 
-    def createMap(self, width, height):
-        pass
-        
+    def create_map(self, width, height):
+        print("YAY!")
+
+    def showNewMapDialog(self):
+        self.popup = NewMapWidget(self)
+        self.popup.show()
+
+    def showOpenMapDialog(self):
+        filename = QFileDialog.getOpenFileName(self, 'Open map', 'assets/maps/', "CSV files (*.csv)")[0]
+        if self.data_manager.openFile(filename, self.gui_manager.infobar):
+            self.gui_manager.showEditor(self.data_manager)
 
     def showEditor(self):
         '''Vaihtaa nakymaksi karttaeditorin'''

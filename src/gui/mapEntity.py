@@ -1,7 +1,7 @@
 from math import sqrt
 
 from PyQt6.QtGui import QPixmap, QImage, qRgb
-from PyQt6.QtWidgets import QLabel
+from PyQt6.QtWidgets import QLabel, QSizePolicy
 from PyQt6.QtCore import Qt
 
 #: qRgb-vastineet kartan arvoille
@@ -13,18 +13,20 @@ COLORS = {
 class MapEntity(QLabel):
     '''Kayttoliittymaluokka kartan renderoimista varten'''
 
-    def __init__(self, infobar, width, height):
+    def __init__(self, gui_manager, width, height):
         super().__init__()
-        self.infobar = infobar
+        self.infobar = gui_manager.infobar
         self.map = ['0'] * width * height
 
         self.renderMap()
 
-    def __init__(self, infobar, map_as_list):
+    def __init__(self, gui_manager, data_manager):
         super().__init__()
-        self.infobar = infobar
-        self.map = map_as_list
 
+        self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding))
+        self.infobar = gui_manager.infobar
+        self.data_manager = data_manager
+        self.map = data_manager.current_map
         self.renderMap()
 
     def renderMap(self):
@@ -60,3 +62,10 @@ class MapEntity(QLabel):
 
     def resizeEvent(self, e):
         self.scalePixmap(self.pixmap)
+
+    def unscalePosition(self, position):
+        '''Palauttaa vastaavat koordinaatit skaalaamattomalla kuvalla'''
+
+        new_position_x = int(position[0]/(self.width()/self.map_length))
+        new_position_y = int(position[1]/(self.width()/self.map_length))
+        return (new_position_x, new_position_y)
