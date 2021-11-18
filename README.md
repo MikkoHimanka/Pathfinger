@@ -1,14 +1,16 @@
 # Pathfinger
 
-Asenna ensin riippuvuudet:
+[Varmista, että python, pip ja pipenv ovat asennettuna.](https://pipenv.pypa.io/en/stable/install/#installing-packages-for-your-project)
+
+Asenna sitten riippuvuudet:
 
 ```
-pip install PyQt6
+pipenv install
 ```
 
 Suorita sovellus komennolla:
 ```
-python3 src/pathfinger.py
+pipenv run start
 ```
 
 ---
