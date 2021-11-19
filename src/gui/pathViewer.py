@@ -2,7 +2,7 @@ from PyQt6.QtGui import QPainter, QColor
 
 from gui.mapEntity import MapEntity
 
-from pathfinder.pathManager import PathManager
+from pathfinding.pathManager import PathManager
 class PathViewer(MapEntity):
     '''Kayttoliittymaluokka polkujen etsintaa varten'''
 
