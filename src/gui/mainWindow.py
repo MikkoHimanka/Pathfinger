@@ -5,8 +5,9 @@ from gui.newMapWidget import NewMapWidget
 from utils.dataManager import DataManager
 from utils.guiManager import GUIManager
 
+
 class MainWindow(QMainWindow):
-    '''Kayttoliittymaluokka ikkunan hallintaan'''
+    """Kayttoliittymaluokka ikkunan hallintaan"""
 
     def __init__(self):
         super().__init__()
@@ -15,23 +16,25 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Pathfinger")
         self.setMinimumWidth(700)
         self.setMinimumHeight(600)
-        self.initMenuBar()
+        self.init_menu_bar()
 
         main_widget = QWidget()
         main_widget.setLayout(self.gui_manager.layout)
         self.setCentralWidget(main_widget)
 
-    def initMenuBar(self):
-        '''Alustaa sovelluksen ylapalkin'''
+    def init_menu_bar(self):
+        """Alustaa sovelluksen ylapalkin"""
 
         menu = self.menuBar()
         file_tab = menu.addMenu("File")
 
-        new_file_action = QAction(QIcon("assets/icons/icons8-new-file-16.png"), "New map", self)
-        new_file_action.triggered.connect(self.showNewMapDialog)
+        new_file_action = QAction(
+            QIcon("assets/icons/icons8-new-file-16.png"), "New map", self
+        )
+        new_file_action.triggered.connect(self.show_new_map_dialog)
 
         open_file_action = QAction("Open map", self)
-        open_file_action.triggered.connect(self.showOpenMapDialog)
+        open_file_action.triggered.connect(self.show_open_map_dialog)
 
         quit_app_action = QAction("Quit", self)
 
@@ -41,25 +44,27 @@ class MainWindow(QMainWindow):
         file_tab.addAction(quit_app_action)
 
     def create_map(self, width, height):
-        print("YAY!")
+        pass
 
-    def showNewMapDialog(self):
+    def show_new_map_dialog(self):
         self.popup = NewMapWidget(self)
         self.popup.show()
 
-    def showOpenMapDialog(self):
-        filename = QFileDialog.getOpenFileName(self, 'Open map', 'assets/maps/', "CSV files (*.csv)")[0]
-        if self.data_manager.openFile(filename, self.gui_manager.infobar):
-            self.gui_manager.showEditor(self.data_manager)
+    def show_open_map_dialog(self):
+        filename = QFileDialog.getOpenFileName(
+            self, "Open map", "assets/maps/", "CSV files (*.csv)"
+        )[0]
+        if self.data_manager.open_file(filename, self.gui_manager.infobar):
+            self.gui_manager.show_editor(self.data_manager)
 
-    def showEditor(self):
-        '''Vaihtaa nakymaksi karttaeditorin'''
+    def show_editor(self):
+        """Vaihtaa nakymaksi karttaeditorin"""
 
         if not self.show_editor:
             self.layout.replaceWidget(self.path_widget, self.editor_widget)
-    
-    def showPathView(self):
-        '''Vaihtaa nakymaksi polunetsinnan'''
-        
+
+    def show_pathview(self):
+        """Vaihtaa nakymaksi polunetsinnan"""
+
         if self.show_editor:
             self.layout.replaceWidget(self.editor_widget, self.path_widget)

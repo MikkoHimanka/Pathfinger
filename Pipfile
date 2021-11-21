@@ -8,7 +8,11 @@ PyQt6 = "6.2.1"
 
 [dev-packages]
 pytest = "6.2.5"
+flake8 = "4.0.1"
+black = "*"
+flake8-black = "0.2.3"
 
 [scripts]
 start = "python src/pathfinger.py"
 test = "pytest"
+quality = "python -m flake8"

@@ -1,8 +1,16 @@
-from PyQt6.QtWidgets import QPushButton, QWidget, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout
+from PyQt6.QtWidgets import (
+    QPushButton,
+    QWidget,
+    QLabel,
+    QLineEdit,
+    QVBoxLayout,
+    QHBoxLayout,
+)
 from PyQt6.QtCore import Qt
 
+
 class NewMapWidget(QWidget):
-    '''Kayttoliittymaluokka uuden kartan luomiseen'''
+    """Kayttoliittymaluokka uuden kartan luomiseen"""
 
     def __init__(self, parent):
         super().__init__()
@@ -15,7 +23,7 @@ class NewMapWidget(QWidget):
         self.y_field.setReadOnly(True)
         self.y_field.setFixedWidth(60)
         self.x_field.setFixedWidth(60)
-        self.x_field.textChanged.connect(self.parseSize)
+        self.x_field.textChanged.connect(self.parse_size)
 
         horizontal_layout = QHBoxLayout()
         horizontal_layout.addStretch()
@@ -26,7 +34,7 @@ class NewMapWidget(QWidget):
 
         self.new_map_button = QPushButton("Create")
         self.new_map_button.setFixedWidth(100)
-        self.new_map_button.clicked.connect(self.createMap)
+        self.new_map_button.clicked.connect(self.create_map)
         self.new_map_button.setDisabled(True)
 
         vertical_layout = QVBoxLayout()
@@ -38,8 +46,9 @@ class NewMapWidget(QWidget):
 
         self.setLayout(vertical_layout)
 
-    def parseSize(self, text):
-        '''Tarkistaa etta annettu koko on hyva numeerinen arvo ja kytkee "Create"-napin paalle tai pois'''
+    def parse_size(self, text):
+        """Tarkistaa etta annettu koko on hyva numeerinen
+        arvo ja kytkee "Create"-napin paalle tai pois"""
 
         try:
             value = int(text)
@@ -52,8 +61,7 @@ class NewMapWidget(QWidget):
             self.new_map_button.setDisabled(True)
             self.infobar.setWarning("A map must be in range of 8-256")
 
-    def createMap(self):
-        '''Luo uuden kartan'''
+    def create_map(self):
+        """Luo uuden kartan"""
 
         self.parent.create_map(int(self.x_field.text()), int(self.y_field.text()))
-        
