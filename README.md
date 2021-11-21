@@ -13,13 +13,30 @@ Suorita sovellus komennolla:
 pipenv run start
 ```
 
+Voit asentaa kehitysriippuvuudet
+```
+pipenv install --dev
+```
+jonka jälkeen voit suorittaa projektin testit komennolla
+```
+pipenv run test
+```
+Koodikattavuusraportin saa suorittamalla seuraavat komennot:
+```
+pipenv run coverage
+pipenv run coverage-report
+```
+
 ---
+
+
 
 [Määrittelydokumentti](docs/maarittely.md)
 
 ## Viikkoraportit
 * [Viikkoraportti 1](docs/viikkoraportti1.md)
 * [Viikkoraportti 2](docs/viikkoraportti2.md)
+* [Viikkoraportti 3](docs/viikkoraportti3.md)
 
 Projektissa käytetyt ikonit:
 

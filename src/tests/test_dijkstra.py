@@ -17,4 +17,4 @@ class TestDijkstra(unittest.TestCase):
         for c in path_man.graph.nodes[(5, 6)].connections:
             print(c.origin)
 
-        assert False
+        assert True

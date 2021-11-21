@@ -7,7 +7,7 @@ Sovelluksella voi luoda yksinkertaisia karttoja jotka koostuvat ruudukosta jonka
 
 Pääpaino sovelluksessa kuitenkin on polunetsintä kahden kartan mielivaltaisen pisteen välillä, jotka käyttäjä voi valita hiirellä. Sovelluksesta näkee visuaalisesti eri algoritmeillä saadut polut ja niihin liittyvät statistiikat.
 
-Mukana olevia polunetsintäalgoritmejä ovat ainakin Dijkstra ( O(m log n) ), IDA* ( O(d) ) ja JPS ( O(\sqrt{n}) ). Muita algoritmejä toteutetaan sovellukseen ajan puitteissa.
+Mukana olevia polunetsintäalgoritmejä ovat ainakin Dijkstra, IDA* ja JPS. Muita algoritmejä toteutetaan sovellukseen ajan puitteissa.
 
 ---
 
