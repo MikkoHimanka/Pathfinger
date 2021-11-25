@@ -18,7 +18,7 @@ class EditorSidebar(QWidget):
 
         path_view_button = QPushButton("Path finding")
         path_view_button.clicked.connect(
-            lambda: self.gui_manager.showPathfinding(self.window().data_manager)
+            lambda: self.gui_manager.show_pathfinding(self.window().data_manager)
         )
 
         layout = QFormLayout()
@@ -42,14 +42,14 @@ class PathSidebar(QWidget):
 
         path_view_button = QPushButton("Map editor")
         path_view_button.clicked.connect(
-            lambda: self.gui_manager.showEditor(self.window().data_manager)
+            lambda: self.gui_manager.show_editor(self.window().data_manager)
         )
 
         algo_select_dropdown = self.init_algo_selection()
 
         find_path_button = QPushButton("Find path")
         find_path_button.clicked.connect(
-            lambda: self.gui_manager.getWidget(0).selectPoints(
+            lambda: self.gui_manager.get_widget(0).select_points(
                 algo_select_dropdown.currentText()
             )
         )

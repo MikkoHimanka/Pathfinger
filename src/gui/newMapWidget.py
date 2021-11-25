@@ -59,7 +59,7 @@ class NewMapWidget(QWidget):
             self.y_field.setText(text)
         except ValueError:
             self.new_map_button.setDisabled(True)
-            self.infobar.setWarning("A map must be in range of 8-256")
+            self.infobar.set_warning("A map must be in range of 8-256")
 
     def create_map(self):
         """Luo uuden kartan"""

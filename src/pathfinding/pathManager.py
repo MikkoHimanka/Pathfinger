@@ -1,5 +1,5 @@
 from math import sqrt
-
+from sys import maxsize
 from pathfinding.dijkstra import Dijkstra
 
 
@@ -8,6 +8,13 @@ class Node:
         self.origin = origin
         self.visited = False
         self.connections = []
+        self.distance = maxsize
+
+    def __repr__(self) -> str:
+        delimiter = ', '
+        return (
+            '(' + delimiter.join([str(value) for value in self.origin]) + ')'
+        )
 
     def add_neighbors(self, origin, map_as_list, nodes: dict):
         neighbor_deltas = [-1, 0, 1]
@@ -51,6 +58,14 @@ class Graph:
 
                 node.add_neighbors((x, y), map_as_list, self.nodes)
 
+    def clean_up(self):
+        for node in self.nodes.values():
+            node.distance = maxsize
+            try:
+                del node.previous_node
+            except AttributeError:
+                continue
+
 
 class PathManager:
     def __init__(self, map_as_list):
@@ -58,4 +73,8 @@ class PathManager:
         self.graph = Graph(map_as_list)
 
     def get_path(self, algorithm, points):
-        return self.algorithms[algorithm].get_path(points, self.graph)
+        start_node = self.graph.nodes[points[0]]
+        end_node = self.graph.nodes[points[1]]
+        result = self.algorithms[algorithm].get_path(start_node, end_node)
+        self.graph.clean_up()
+        return result

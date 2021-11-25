@@ -4,6 +4,7 @@ from PyQt6.QtGui import QPixmap, QImage, qRgb
 from PyQt6.QtWidgets import QLabel, QSizePolicy
 from PyQt6.QtCore import Qt
 
+
 #: qRgb-vastineet kartan arvoille
 COLORS = {"0": qRgb(100, 100, 100), "1": qRgb(255, 100, 100)}
 
@@ -27,6 +28,10 @@ class MapEntity(QLabel):
         self.infobar = gui_manager.infobar
         self.data_manager = data_manager
         self.map = data_manager.current_map
+        self.render_map()
+
+    def restore_image(self):
+        self.map = self.data_manager.current_map
         self.render_map()
 
     def render_map(self):

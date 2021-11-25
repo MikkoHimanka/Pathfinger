@@ -17,5 +17,8 @@ class DataManager:
             self.current_map = self.csv_manager.open_file(filename)
             return True
         except Exception as e:
-            infobar.setWarning(e.args[0])
+            infobar.set_warning(e.args[0])
             return False
+
+    def clear_path(self):
+        self.current_path.clear()

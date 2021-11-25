@@ -1,18 +1,39 @@
 from collections import deque
 
+from utils.mathTools import distance
+
 
 class Dijkstra:
-    def get_path(self, points, graph):
-        return [(0, 0), (1, 1)]
+    def get_path(self, start_node, end_node):
+        start_node.distance = 0
 
-        start = points[0]
-        end = points[1]
-        queue = deque(graph.nodes[points[0]])
+        queue = deque()
+        queue.append(start_node)
 
         while len(queue) != 0:
-            node = queue.popleft()[1]
-            if node.visited:
-                continue
-            node.visited = True
+            node = queue.popleft()
+            if node == end_node:
+                break
+
             for neighbour in node.connections:
-                pass
+                new_distance = (
+                    node.distance + distance(node.origin, neighbour.origin)
+                )
+                if new_distance >= neighbour.distance:
+                    continue
+                neighbour.distance = new_distance
+                neighbour.previous_node = node
+                queue.append(neighbour)
+
+        result = [end_node.origin]
+        current = end_node
+        while True:
+            try:
+                result.append(current.previous_node.origin)
+                current = current.previous_node
+            except AttributeError:
+                break
+
+        result.reverse()
+
+        return result
