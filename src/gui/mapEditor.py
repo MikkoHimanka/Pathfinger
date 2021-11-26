@@ -37,3 +37,5 @@ class MapEditor(MapEntity):
         self.scale_pixmap(self.pixmap)
 
         self.brush = ""
+
+        self.data_manager.map_changed = True

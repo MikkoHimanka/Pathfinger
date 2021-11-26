@@ -10,8 +10,15 @@ class Dijkstra:
         queue = deque()
         queue.append(start_node)
 
+        visited_points = []
+
         while len(queue) != 0:
             node = queue.popleft()
+
+            if not node.visited:
+                visited_points.append(node.origin)
+                node.visited = True
+
             if node == end_node:
                 break
 
@@ -25,15 +32,14 @@ class Dijkstra:
                 neighbour.previous_node = node
                 queue.append(neighbour)
 
-        result = [end_node.origin]
+        resulting_path = [end_node.origin]
         current = end_node
         while True:
             try:
-                result.append(current.previous_node.origin)
+                resulting_path.append(current.previous_node.origin)
                 current = current.previous_node
             except AttributeError:
                 break
+        resulting_path.reverse()
 
-        result.reverse()
-
-        return result
+        return [resulting_path, visited_points]

@@ -61,6 +61,7 @@ class Graph:
     def clean_up(self):
         for node in self.nodes.values():
             node.distance = maxsize
+            node.visited = False
             try:
                 del node.previous_node
             except AttributeError:

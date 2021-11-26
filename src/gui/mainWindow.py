@@ -44,7 +44,9 @@ class MainWindow(QMainWindow):
         file_tab.addAction(quit_app_action)
 
     def create_map(self, width, height):
-        pass
+        self.data_manager.create_empty(width, height)
+        self.gui_manager.show_editor(self.data_manager)
+        self.popup.close()
 
     def show_new_map_dialog(self):
         self.popup = NewMapWidget(self)
@@ -56,15 +58,3 @@ class MainWindow(QMainWindow):
         )[0]
         if self.data_manager.open_file(filename, self.gui_manager.infobar):
             self.gui_manager.show_editor(self.data_manager)
-
-    def show_editor(self):
-        """Vaihtaa nakymaksi karttaeditorin"""
-
-        if not self.show_editor:
-            self.layout.replaceWidget(self.path_widget, self.editor_widget)
-
-    def show_pathview(self):
-        """Vaihtaa nakymaksi polunetsinnan"""
-
-        if self.show_editor:
-            self.layout.replaceWidget(self.editor_widget, self.path_widget)

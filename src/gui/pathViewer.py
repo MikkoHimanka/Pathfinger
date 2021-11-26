@@ -2,8 +2,6 @@ from PyQt6.QtGui import QPainter, QColor
 
 from gui.mapEntity import MapEntity
 
-from pathfinding.pathManager import PathManager
-
 
 class PathViewer(MapEntity):
     """Kayttoliittymaluokka polkujen etsintaa varten"""
@@ -15,7 +13,6 @@ class PathViewer(MapEntity):
         self.points_selected = False
         self.points = [(-1, -1), (-1, -1)]
         self.painter = QPainter()
-        self.path_manager = PathManager(self.map)
 
     def select_points(self, algorithm):
         self.restore_image()
@@ -38,26 +35,7 @@ class PathViewer(MapEntity):
                 self.infobar.clear()
                 self.selection_active = False
                 self.points_selected = True
-                self.path = self.path_manager.get_path(
+                self.data_manager.set_path(
                     self.current_algorithm, self.points
                 )
-
-    def paintEvent(self, e):  # noqa: N802
-        super().paintEvent(e)
-        if not self.selection_active and self.points_selected:
-            if len(self.path) < 2:
-                self.infobar.set_warning("No path found")
-                return
-
-            self.painter.begin(self.pixmap)
-            self.painter.setPen(QColor(0, 255, 0, 255))
-
-            for i in range(len(self.path) - 1):
-                self.painter.drawLine(
-                    self.path[i][0],
-                    self.path[i][1],
-                    self.path[i + 1][0],
-                    self.path[i + 1][1],
-                )
-
-            self.painter.end()
+                self.render_map()

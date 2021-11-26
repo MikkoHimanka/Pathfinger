@@ -11,6 +11,8 @@ class GUIManager:
     def __init__(self):
         self.infobar = Infobar()
         self.init_layout()
+        self.show_visited = True
+        self.show_path = True
 
     def init_layout(self):
         self.layout = QVBoxLayout()

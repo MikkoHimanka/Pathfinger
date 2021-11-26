@@ -6,7 +6,12 @@ from PyQt6.QtCore import Qt
 
 
 #: qRgb-vastineet kartan arvoille
-COLORS = {"0": qRgb(100, 100, 100), "1": qRgb(255, 100, 100)}
+COLORS = {
+    "0": qRgb(100, 100, 100),
+    "1": qRgb(255, 100, 100),
+    "yellow": qRgb(170, 170, 50),
+    "green": qRgb(0, 200, 0),
+}
 
 
 class MapEntity(QLabel):
@@ -25,6 +30,8 @@ class MapEntity(QLabel):
         self.setSizePolicy(
             QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         )
+        data_manager.path_manager.map_changed = True
+        self.gui_manager = gui_manager
         self.infobar = gui_manager.infobar
         self.data_manager = data_manager
         self.map = data_manager.current_map
@@ -40,11 +47,33 @@ class MapEntity(QLabel):
             self.map_length = int(sqrt(len(self.map)))
 
             self.image = self.image_from_list(self.map, self.map_length)
-            self.pixmap: QPixmap = QPixmap(self.image)
+            self.data_manager.init_graph()
 
+            if self.gui_manager.show_visited:
+                self.set_pixels(
+                    self.image,
+                    self.data_manager.current_visited,
+                    "yellow",
+                )
+            print(len(self.data_manager.current_visited))
+            if self.gui_manager.show_path:
+                self.set_pixels(
+                    self.image,
+                    self.data_manager.current_path,
+                    "green"
+                )
+
+            self.pixmap: QPixmap = QPixmap(self.image)
             self.scale_pixmap(self.pixmap)
         else:
             self.pixmap = QPixmap()
+
+        self.data_manager.map_changed = False
+        self.data_manager.path_changed = False
+
+    def set_pixels(self, image, coordinates, color):
+        for coord in coordinates:
+            image.setPixel(coord[0], coord[1], COLORS[color])
 
     def image_from_list(self, arr, length):
         """Generoi QImage-olion yksiulotteisesta listasta"""

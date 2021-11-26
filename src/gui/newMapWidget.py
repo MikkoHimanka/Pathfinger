@@ -12,11 +12,11 @@ from PyQt6.QtCore import Qt
 class NewMapWidget(QWidget):
     """Kayttoliittymaluokka uuden kartan luomiseen"""
 
-    def __init__(self, parent):
+    def __init__(self, window):
         super().__init__()
-        self.parent = parent
+        self.window = window
         self.is_square = True
-        self.infobar = parent.infobar
+        self.infobar = window.gui_manager.infobar
         self.x_field = QLineEdit()
         self.y_field = QLineEdit()
 
@@ -55,7 +55,7 @@ class NewMapWidget(QWidget):
             if value < 8 or value > 256:
                 raise ValueError()
             self.new_map_button.setDisabled(False)
-            self.infobar.setMessage("")
+            self.infobar.set_message("")
             self.y_field.setText(text)
         except ValueError:
             self.new_map_button.setDisabled(True)
@@ -64,4 +64,4 @@ class NewMapWidget(QWidget):
     def create_map(self):
         """Luo uuden kartan"""
 
-        self.parent.create_map(int(self.x_field.text()), int(self.y_field.text()))
+        self.window.create_map(int(self.x_field.text()), int(self.y_field.text()))
