@@ -8,6 +8,8 @@ class MapEditor(MapEntity):
     def __init__(self, gui_manager, data_manager):
         super().__init__(gui_manager, data_manager)
         self.brush = ""
+        self.data_manager.clear_path()
+        self.render_map()
 
     def mouseMoveEvent(self, e):  # noqa: N802
         """Asettaa pensselin arvoksi vastakkaisen kartan arvon

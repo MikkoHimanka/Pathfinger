@@ -1,5 +1,5 @@
 from PyQt6.QtGui import QColor, QPalette
-from PyQt6.QtWidgets import QComboBox, QFormLayout, QLabel, QPushButton, QWidget
+from PyQt6.QtWidgets import QCheckBox, QComboBox, QFormLayout, QLabel, QPushButton, QWidget
 
 
 class EditorSidebar(QWidget):
@@ -54,11 +54,17 @@ class PathSidebar(QWidget):
             )
         )
 
+        allow_diagonal = QCheckBox("Allow diagonal movement")
+        allow_diagonal.stateChanged.connect(
+            lambda: self.window().data_manager.set_diagonal(allow_diagonal.isChecked())
+        )
+
         layout = QFormLayout()
         layout.addRow(QLabel("Path finding"))
         layout.addRow(path_view_button)
         layout.addRow(algo_select_dropdown)
         layout.addRow(find_path_button)
+        layout.addRow(allow_diagonal)
 
         self.setLayout(layout)
 

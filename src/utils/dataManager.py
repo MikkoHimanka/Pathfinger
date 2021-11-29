@@ -10,7 +10,7 @@ class DataManager:
         self.current_map = []
         self.current_path = []
         self.current_visited = []
-        self.path_manager = PathManager(self.current_map)
+        self.path_manager = PathManager(self.current_map, False)
 
     def open_file(self, filename, infobar):
         try:
@@ -34,7 +34,7 @@ class DataManager:
 
     def init_graph(self):
         if self.map_changed:
-            self.path_manager = PathManager(self.current_map)
+            self.path_manager.init_graph(self.current_map)
             self.map_changed = False
 
     def set_path(self, algorithm, points):
@@ -42,3 +42,6 @@ class DataManager:
         self.current_path = found_path[0]
         self.current_visited = found_path[1]
         self.path_changed = True
+
+    def set_diagonal(self, value):
+        self.path_manager.init_graph(self.current_map, value)

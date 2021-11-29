@@ -55,7 +55,6 @@ class MapEntity(QLabel):
                     self.data_manager.current_visited,
                     "yellow",
                 )
-            print(len(self.data_manager.current_visited))
             if self.gui_manager.show_path:
                 self.set_pixels(
                     self.image,

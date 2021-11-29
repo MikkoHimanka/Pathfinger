@@ -32,14 +32,19 @@ class Dijkstra:
                 neighbour.previous_node = node
                 queue.append(neighbour)
 
-        resulting_path = [end_node.origin]
+        resulting_path = []
         current = end_node
-        while True:
-            try:
-                resulting_path.append(current.previous_node.origin)
+
+        try:
+            while current.previous_node:
+                resulting_path.append(current.origin)
                 current = current.previous_node
-            except AttributeError:
-                break
+        except AttributeError:
+            pass
+
+        if len(resulting_path) > 0:
+            resulting_path.append(current.origin)
+
         resulting_path.reverse()
 
         return [resulting_path, visited_points]
