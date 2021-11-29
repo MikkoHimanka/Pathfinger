@@ -12,7 +12,7 @@ class Dijkstra:
 
         visited_points = []
 
-        while len(queue) != 0:
+        while len(queue) > 0:
             node = queue.popleft()
 
             if not node.visited:

@@ -71,6 +71,6 @@ class PathSidebar(QWidget):
     def init_algo_selection(self):
         select_algo_menu = QComboBox(self)
         select_algo_menu.addItem("Dijkstra")
-        select_algo_menu.addItem("Another one")
+        select_algo_menu.addItem("A*")
 
         return select_algo_menu

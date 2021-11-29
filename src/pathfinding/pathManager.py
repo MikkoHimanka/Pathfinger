@@ -2,6 +2,7 @@ from math import sqrt
 from sys import maxsize
 
 from pathfinding.dijkstra import Dijkstra
+from pathfinding.aStar import AStar
 
 
 class Node:
@@ -106,6 +107,7 @@ class PathManager:
     def __init__(self, map_as_list, allow_diagonal):
         self.algorithms = {
             "Dijkstra": Dijkstra(),
+            "A*": AStar(),
         }
         self.diagonal = allow_diagonal
         self.init_graph(map_as_list, allow_diagonal)
