@@ -19,8 +19,8 @@ class TestDijkstra(unittest.TestCase):
             (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7)
         ]
 
-        path_man = PathManager(self.simple_map)
-        result = path_man.get_path("Dijkstra", [(0, 0), (7, 7)])
+        path_man = PathManager(self.simple_map, True)
+        result = path_man.get_path("Dijkstra", [(0, 0), (7, 7)])[0]
 
         assert (result == correct_path)
 
@@ -29,8 +29,8 @@ class TestDijkstra(unittest.TestCase):
             (0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (6, 3), (7, 3)
         ]
 
-        path_man = PathManager(self.simple_map)
-        result = path_man.get_path("Dijkstra", [(0, 3), (7, 3)])
+        path_man = PathManager(self.simple_map, True)
+        result = path_man.get_path("Dijkstra", [(0, 3), (7, 3)])[0]
 
         assert (result == correct_path)
 
@@ -39,17 +39,15 @@ class TestDijkstra(unittest.TestCase):
             (0, 0), (1, 1), (1, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7)
         ]
 
-        path_man = PathManager(self.simple_map)
-        result = path_man.get_path("Dijkstra", [(0, 0), (0, 7)])
+        path_man = PathManager(self.simple_map, True)
+        result = path_man.get_path("Dijkstra", [(0, 0), (0, 7)])[0]
 
         self.assertEqual(result, correct_path)
 
     def test_dijkstra_doesnt_return_full_path_when_failing(self):
-        correct_path = [
-            (7, 0)
-        ]
+        correct_path = []
 
-        path_man = PathManager(self.simple_map_wall)
-        result = path_man.get_path("Dijkstra", [(0, 0), (7, 0)])
+        path_man = PathManager(self.simple_map_wall, True)
+        result = path_man.get_path("Dijkstra", [(0, 0), (7, 0)])[0]
 
         self.assertEqual(result, correct_path)
