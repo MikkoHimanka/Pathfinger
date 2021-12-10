@@ -1,10 +1,11 @@
 from collections import deque
 
-from utils.mathTools import distance
+from utils.mathTools import distance, manhattan_distance
 
 
 class Dijkstra:
-    def get_path(self, start_node, end_node):
+    def get_path(self, start_node, end_node, allow_diagonal):
+        h = distance if allow_diagonal else manhattan_distance
         start_node.distance = 0
 
         queue = deque()
@@ -24,7 +25,7 @@ class Dijkstra:
 
             for neighbour in node.connections:
                 new_distance = (
-                    node.distance + distance(node.origin, neighbour.origin)
+                    node.distance + h(node.origin, neighbour.origin)
                 )
                 if new_distance >= neighbour.distance:
                     continue

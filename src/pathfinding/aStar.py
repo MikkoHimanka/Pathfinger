@@ -1,38 +1,38 @@
-from utils.mathTools import distance
-
+from utils.mathTools import distance, nudge, manhattan_distance
+from heapq import heapify, heappush, heappop
 
 class AStar:
-    def get_path(self, start_node, end_node):
+    def get_path(self, start_node, end_node, allow_diagonal):
+        h = distance if allow_diagonal else manhattan_distance
         start_node.distance = 0
 
-        queue = []
-        visited_points = []
+        heap = []
+        heapify(heap)
+        visited = [start_node.origin]
 
-        queue.append((0, start_node))
+        heappush(heap, (0, start_node))
 
-        while len(queue) > 0:
-            node = queue.pop()[1]
-
-            if not node.visited:
-                visited_points.append(node.origin)
-                node.visited = True
+        while len(heap) > 0:
+            node = heappop(heap)[1]
 
             if node == end_node:
                 break
 
             for neighbor in node.connections:
                 new_distance = (
-                    node.distance + distance(node.origin, neighbor.origin)
+                    node.distance +
+                    h(node.origin, neighbor.origin) +
+                    nudge(node.origin, neighbor.origin)
                 )
-                if new_distance >= neighbor.distance:
-                    continue
-                neighbor.distance = new_distance
-                neighbor.previous_node = node
-
-                neighbour_to_goal = distance(neighbor.origin, end_node.origin)
-                queue.append((neighbour_to_goal, neighbor))
-
-            queue.sort(key=lambda item: item[0], reverse=True)
+                if new_distance < neighbor.distance:
+                    neighbor.distance = new_distance
+                    priority = (
+                        new_distance +
+                        h(neighbor.origin, end_node.origin)
+                    )
+                    heappush(heap, (priority, neighbor))
+                    neighbor.previous_node = node
+                    visited.append(neighbor.origin)
 
         resulting_path = []
         current = end_node
@@ -49,4 +49,4 @@ class AStar:
 
         resulting_path.reverse()
 
-        return [resulting_path, visited_points]
+        return [resulting_path, visited]

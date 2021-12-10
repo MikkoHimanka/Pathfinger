@@ -15,6 +15,7 @@ class PathViewer(MapEntity):
         self.painter = QPainter()
 
     def select_points(self, algorithm):
+        self.break_search = True
         self.restore_image()
         self.data_manager.clear_path()
         self.current_algorithm = algorithm

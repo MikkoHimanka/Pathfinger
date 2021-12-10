@@ -1,8 +1,14 @@
 from math import sqrt
 
-from PyQt6.QtGui import QPixmap, QImage, qRgb
+from PyQt6.QtGui import QPixmap, QImage, qRgb, QColor
 from PyQt6.QtWidgets import QLabel, QSizePolicy
 from PyQt6.QtCore import Qt
+
+from copy import deepcopy
+import time
+import threading
+
+from utils.dataManager import DataManager
 
 
 #: qRgb-vastineet kartan arvoille
@@ -16,13 +22,6 @@ COLORS = {
 
 class MapEntity(QLabel):
     """Kayttoliittymaluokka kartan renderoimista varten"""
-
-    # def __init__(self, gui_manager, width, height):
-    #     super().__init__()
-    #     self.infobar = gui_manager.infobar
-    #     self.map = ["0"] * width * height
-
-    #     self.renderMap()
 
     def __init__(self, gui_manager, data_manager):
         super().__init__()
@@ -41,6 +40,24 @@ class MapEntity(QLabel):
         self.map = self.data_manager.current_map
         self.render_map()
 
+    def iterate_and_render(self):
+        self.break_search = False
+        self.data_manager.path_changed = False
+        visited = deepcopy(self.data_manager.current_visited)
+        for i in range(len(visited)):
+            if self.break_search:
+                break
+            self.lighten_pixel(self.image, visited[i])
+            self.set_pixmap()
+            time.sleep(self.gui_manager.speed)
+
+        self.set_pixels(
+            self.image,
+            self.data_manager.current_path,
+            "green"
+        )
+        self.set_pixmap()
+
     def render_map(self):
         """Luo QPixmap-olion yksiulotteisesta listasta"""
         if len(self.map) > 0:
@@ -48,31 +65,31 @@ class MapEntity(QLabel):
 
             self.image = self.image_from_list(self.map, self.map_length)
             self.data_manager.init_graph()
+            self.set_pixmap()
 
-            if self.gui_manager.show_visited:
-                self.set_pixels(
-                    self.image,
-                    self.data_manager.current_visited,
-                    "yellow",
-                )
-            if self.gui_manager.show_path:
-                self.set_pixels(
-                    self.image,
-                    self.data_manager.current_path,
-                    "green"
-                )
-
-            self.pixmap: QPixmap = QPixmap(self.image)
-            self.scale_pixmap(self.pixmap)
+            if self.data_manager.path_changed:
+                self.iterator_thread = threading.Thread(target=self.iterate_and_render)
+                self.iterator_thread.start()
         else:
             self.pixmap = QPixmap()
 
         self.data_manager.map_changed = False
-        self.data_manager.path_changed = False
 
     def set_pixels(self, image, coordinates, color):
         for coord in coordinates:
             image.setPixel(coord[0], coord[1], COLORS[color])
+
+    def set_pixel(self, image, coord, color):
+        image.setPixel(coord[0], coord[1], COLORS[color])
+
+    def lighten_pixel(self, image, coord):
+        old_color = image.pixelColor(coord[0], coord[1])
+        new_color = qRgb(old_color.red() + 10, old_color.green() + 10, old_color.blue() + 10)
+        image.setPixel(coord[0], coord[1], new_color)
+
+    def set_pixmap(self):
+        self.pixmap: QPixmap = QPixmap(self.image)
+        self.scale_pixmap(self.pixmap)
 
     def image_from_list(self, arr, length):
         """Generoi QImage-olion yksiulotteisesta listasta"""

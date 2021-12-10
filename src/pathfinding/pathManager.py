@@ -3,6 +3,7 @@ from sys import maxsize
 
 from pathfinding.dijkstra import Dijkstra
 from pathfinding.aStar import AStar
+from pathfinding.greedyBF import GreedyBF
 
 
 class Node:
@@ -18,50 +19,44 @@ class Node:
             '(' + delimiter.join([str(value) for value in self.origin]) + ')'
         )
 
+    def __gt__(self, other):
+        return self.origin > other.origin
+
     def add_neighbors(self, origin, map_as_list, nodes: dict, allow_diagonal: bool):
         '''Lisaa Noden naapurit connections listaan'''
         
         max_size = int(sqrt(len(map_as_list)))
-        
+        x = origin[0]
+        y = origin[1]
+
+        neighbor_deltas = [
+            (x-1, y),
+            (x+1, y),
+            (x, y-1),
+            (x, y+1)
+        ]
+
         if allow_diagonal:
-            neighbor_deltas = [-1, 0, 1]
-            
-            for x_delta in neighbor_deltas:
-                for y_delta in neighbor_deltas:
-                    if (x_delta, y_delta) == (0, 0):
-                        continue
+            neighbor_deltas += [
+                (x-1, y-1),
+                (x+1, y-1),
+                (x-1, y+1),
+                (x+1, y+1)
+            ]
 
-                    neighbour_coord = (origin[0] + x_delta, origin[1] + y_delta)
-                    if neighbour_coord[0] >= max_size or neighbour_coord[0] < 0:
-                        continue
-                    if neighbour_coord[1] >= max_size or neighbour_coord[1] < 0:
-                        continue
+        if (x + y) % 2 == 0:
+            neighbor_deltas.reverse()
+        
+        neighbor_deltas = list(filter(lambda x: x[0] >= 0 and x[1] >= 0, neighbor_deltas))
+        neighbor_deltas = list(filter(lambda x: x[0] < max_size and x[1] < max_size, neighbor_deltas))
 
-                    self.insert_neighbour(
-                        neighbour_coord,
-                        map_as_list,
-                        nodes,
-                        max_size
-                    )
-
-        else:
-            for delta in [-1, 1]:
-                new_x = origin[0] + delta
-                new_y = origin[1] + delta
-                if not (new_x >= max_size or new_x < 0):
-                    self.insert_neighbour(
-                        (new_x, origin[1]),
-                        map_as_list,
-                        nodes,
-                        max_size
-                    )
-                if not (new_y >= max_size or new_y < 0):
-                    self.insert_neighbour(
-                        (origin[0], new_y),
-                        map_as_list,
-                        nodes,
-                        max_size
-                    )
+        for coord in neighbor_deltas:
+            self.insert_neighbour(
+                coord,
+                map_as_list,
+                nodes,
+                max_size
+            )
 
     def insert_neighbour(self, coord, map_as_list, nodes, upper_limit):
         map_value = map_as_list[
@@ -107,6 +102,7 @@ class PathManager:
     def __init__(self, map_as_list, allow_diagonal):
         self.algorithms = {
             "Dijkstra": Dijkstra(),
+            "Greedy Best-First": GreedyBF(),
             "A*": AStar(),
         }
         self.diagonal = allow_diagonal
@@ -124,6 +120,10 @@ class PathManager:
     def get_path(self, algorithm, points):
         start_node = self.graph.nodes[points[0]]
         end_node = self.graph.nodes[points[1]]
-        result = self.algorithms[algorithm].get_path(start_node, end_node)
+        result = self.algorithms[algorithm].get_path(
+            start_node,
+            end_node,
+            self.graph.allow_diagonal
+        )
         self.graph.clean_up()
         return result

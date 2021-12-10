@@ -1,5 +1,6 @@
+import PyQt6
 from PyQt6.QtGui import QColor, QPalette
-from PyQt6.QtWidgets import QCheckBox, QComboBox, QFormLayout, QLabel, QPushButton, QWidget
+from PyQt6.QtWidgets import QCheckBox, QComboBox, QFormLayout, QLabel, QPushButton, QSlider, QWidget
 
 
 class EditorSidebar(QWidget):
@@ -59,18 +60,32 @@ class PathSidebar(QWidget):
             lambda: self.window().data_manager.set_diagonal(allow_diagonal.isChecked())
         )
 
+        speed_slider = QSlider(PyQt6.QtCore.Qt.Orientation.Horizontal)
+        speed_slider.setMinimum(-10)
+        speed_slider.setMaximum(-1)
+        speed_slider.setSingleStep(1)
+        speed_slider.setValue(-5)
+        speed_slider.valueChanged.connect(
+            self.change_speed
+        )
+
         layout = QFormLayout()
         layout.addRow(QLabel("Path finding"))
         layout.addRow(path_view_button)
         layout.addRow(algo_select_dropdown)
         layout.addRow(find_path_button)
         layout.addRow(allow_diagonal)
+        layout.addRow(speed_slider)
 
         self.setLayout(layout)
 
     def init_algo_selection(self):
         select_algo_menu = QComboBox(self)
         select_algo_menu.addItem("Dijkstra")
+        select_algo_menu.addItem("Greedy Best-First")
         select_algo_menu.addItem("A*")
 
         return select_algo_menu
+
+    def change_speed(self, value):
+        self.gui_manager.speed = abs(value/100)
