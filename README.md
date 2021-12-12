@@ -39,6 +39,7 @@ pipenv run coverage-report
 * [Viikkoraportti 3](docs/viikkoraportti3.md)
 * [Viikkoraportti 4](docs/viikkoraportti4.md)
 *  [Viikkoraportti 5](docs/viikkoraportti5.md)
+*  [Viikkoraportti 6](docs/viikkoraportti6.md)
 
 Projektissa käytetyt ikonit:
 
