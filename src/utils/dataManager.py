@@ -5,7 +5,6 @@ from utils.CSVManager import CSVManager
 class DataManager:
     def __init__(self):
         self.csv_manager = CSVManager()
-        self.map_changed = True
         self.path_changed = False
         self.current_map = []
         self.current_path = []
@@ -15,7 +14,6 @@ class DataManager:
     def open_file(self, filename, infobar):
         try:
             self.current_map = self.csv_manager.open_file(filename)
-            self.map_changed = True
             self.clear_path()
             return True
         except Exception as e:
@@ -31,12 +29,9 @@ class DataManager:
         self.current_path.clear()
         self.current_visited.clear()
         self.path_changed = False
-        self.map_changed = True
 
     def init_graph(self):
-        if self.map_changed:
-            self.path_manager.init_graph(self.current_map)
-            self.map_changed = False
+        self.path_manager.init_graph(self.current_map)
 
     def set_path(self, algorithm, points):
         found_path = self.path_manager.get_path(algorithm, points)

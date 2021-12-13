@@ -8,6 +8,7 @@ class PathViewer(MapEntity):
 
     def __init__(self, gui_manager, data_manager):
         super().__init__(gui_manager, data_manager)
+        self.data_manager.init_graph()
         self.current_algorithm = ""
         self.selection_active = False
         self.points_selected = False
@@ -15,7 +16,6 @@ class PathViewer(MapEntity):
         self.painter = QPainter()
 
     def select_points(self, algorithm):
-        self.break_search = True
         self.restore_image()
         self.data_manager.clear_path()
         self.current_algorithm = algorithm
