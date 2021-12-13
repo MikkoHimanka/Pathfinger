@@ -2,7 +2,7 @@ from math import sqrt
 
 from PyQt6.QtGui import QPixmap, QImage, qRgb, QColor
 from PyQt6.QtWidgets import QLabel, QSizePolicy
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QThread, Qt
 
 from copy import deepcopy
 import time
@@ -18,6 +18,28 @@ COLORS = {
     "yellow": qRgb(170, 170, 50),
     "green": qRgb(0, 200, 0),
 }
+
+
+class PathRenderThread(QThread):
+    def __init__(self, entity):
+        super().__init__()
+        self.map_entity: MapEntity = entity
+
+    def run(self):
+        self.map_entity.break_search = False
+        self.map_entity.data_manager.path_changed = False
+        visited = deepcopy(self.map_entity.data_manager.current_visited)
+
+        for i in range(len(visited)):
+            if self.map_entity.break_search:
+                self.map_entity.break_search = False
+                break
+            self.map_entity.set_pixel(visited[i], "yellow")
+            self.map_entity.set_pixmap()
+            self.msleep(self.map_entity.gui_manager.speed)
+
+        self.map_entity.set_pixels(self.map_entity.data_manager.current_path, "green")
+        self.map_entity.set_pixmap()
 
 
 class MapEntity(QLabel):
@@ -40,24 +62,6 @@ class MapEntity(QLabel):
         self.map = self.data_manager.current_map
         self.render_map()
 
-    def iterate_and_render(self):
-        self.break_search = False
-        self.data_manager.path_changed = False
-        visited = deepcopy(self.data_manager.current_visited)
-        for i in range(len(visited)):
-            if self.break_search:
-                break
-            self.lighten_pixel(self.image, visited[i])
-            self.set_pixmap()
-            time.sleep(self.gui_manager.speed)
-
-        self.set_pixels(
-            self.image,
-            self.data_manager.current_path,
-            "green"
-        )
-        self.set_pixmap()
-
     def render_map(self):
         """Luo QPixmap-olion yksiulotteisesta listasta"""
         if len(self.map) > 0:
@@ -68,19 +72,19 @@ class MapEntity(QLabel):
             self.set_pixmap()
 
             if self.data_manager.path_changed:
-                self.iterator_thread = threading.Thread(target=self.iterate_and_render)
+                self.iterator_thread = PathRenderThread(self)
                 self.iterator_thread.start()
         else:
             self.pixmap = QPixmap()
 
         self.data_manager.map_changed = False
 
-    def set_pixels(self, image, coordinates, color):
+    def set_pixels(self, coordinates, color):
         for coord in coordinates:
-            image.setPixel(coord[0], coord[1], COLORS[color])
+            self.image.setPixel(coord[0], coord[1], COLORS[color])
 
-    def set_pixel(self, image, coord, color):
-        image.setPixel(coord[0], coord[1], COLORS[color])
+    def set_pixel(self, coord, color):
+        self.image.setPixel(coord[0], coord[1], COLORS[color])
 
     def lighten_pixel(self, image, coord):
         old_color = image.pixelColor(coord[0], coord[1])

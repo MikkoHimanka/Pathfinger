@@ -6,7 +6,7 @@ class DataManager:
     def __init__(self):
         self.csv_manager = CSVManager()
         self.map_changed = True
-        self.path_changed = True
+        self.path_changed = False
         self.current_map = []
         self.current_path = []
         self.current_visited = []
@@ -30,7 +30,8 @@ class DataManager:
     def clear_path(self):
         self.current_path.clear()
         self.current_visited.clear()
-        self.path_changed = True
+        self.path_changed = False
+        self.map_changed = True
 
     def init_graph(self):
         if self.map_changed:

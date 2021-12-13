@@ -61,10 +61,10 @@ class PathSidebar(QWidget):
         )
 
         speed_slider = QSlider(PyQt6.QtCore.Qt.Orientation.Horizontal)
-        speed_slider.setMinimum(-10)
-        speed_slider.setMaximum(-1)
-        speed_slider.setSingleStep(1)
-        speed_slider.setValue(-5)
+        speed_slider.setMinimum(-1000)
+        speed_slider.setMaximum(-10)
+        speed_slider.setSingleStep(10)
+        speed_slider.setValue(-50)
         speed_slider.valueChanged.connect(
             self.change_speed
         )
@@ -88,4 +88,4 @@ class PathSidebar(QWidget):
         return select_algo_menu
 
     def change_speed(self, value):
-        self.gui_manager.speed = abs(value/100)
+        self.gui_manager.speed = abs(value)

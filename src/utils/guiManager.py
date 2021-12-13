@@ -13,7 +13,7 @@ class GUIManager:
         self.init_layout()
         self.show_visited = True
         self.show_path = True
-        self.speed = 0.05
+        self.speed = 50
 
     def init_layout(self):
         self.layout = QVBoxLayout()
