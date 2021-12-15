@@ -4,6 +4,7 @@ from sys import maxsize
 from pathfinding.dijkstra import Dijkstra
 from pathfinding.aStar import AStar
 from pathfinding.greedyBF import GreedyBF
+from pathfinding.idaStar import IdaStar
 
 
 class Node:
@@ -104,6 +105,7 @@ class PathManager:
             "Dijkstra": Dijkstra(),
             "Greedy Best-First": GreedyBF(),
             "A*": AStar(),
+            "IDA*": IdaStar(),
         }
         self.diagonal = allow_diagonal
         self.init_graph(map_as_list, allow_diagonal)

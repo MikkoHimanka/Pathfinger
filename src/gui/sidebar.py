@@ -61,9 +61,9 @@ class PathSidebar(QWidget):
         )
 
         speed_slider = QSlider(PyQt6.QtCore.Qt.Orientation.Horizontal)
-        speed_slider.setMinimum(-1000)
-        speed_slider.setMaximum(-10)
-        speed_slider.setSingleStep(10)
+        speed_slider.setMinimum(-100)
+        speed_slider.setMaximum(-1)
+        speed_slider.setSingleStep(1)
         speed_slider.setValue(-50)
         speed_slider.valueChanged.connect(
             self.change_speed
@@ -84,6 +84,7 @@ class PathSidebar(QWidget):
         select_algo_menu.addItem("Dijkstra")
         select_algo_menu.addItem("Greedy Best-First")
         select_algo_menu.addItem("A*")
+        select_algo_menu.addItem("IDA*")
 
         return select_algo_menu
 
