@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
 
     def show_open_map_dialog(self):
         filename = QFileDialog.getOpenFileName(
-            self, "Open map", "assets/maps/", "CSV files (*.csv)"
+            self, "Open map", "assets/maps/", "CSV files (*.csv);;MAP files (*.map);;All supported (*.csv *.map)"
         )[0]
         if self.data_manager.open_file(filename, self.gui_manager.infobar):
             self.gui_manager.show_editor(self.data_manager)

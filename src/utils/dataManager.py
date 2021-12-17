@@ -1,10 +1,10 @@
 from pathfinding.pathManager import PathManager
-from utils.CSVManager import CSVManager
+from utils.FileManager import FileManager
 
 
 class DataManager:
     def __init__(self):
-        self.csv_manager = CSVManager()
+        self.file_manager = FileManager()
         self.path_changed = False
         self.current_map = []
         self.current_path = []
@@ -13,7 +13,7 @@ class DataManager:
 
     def open_file(self, filename, infobar):
         try:
-            self.current_map = self.csv_manager.open_file(filename)
+            self.current_map = self.file_manager.open_file(filename)
             self.clear_path()
             return True
         except Exception as e:

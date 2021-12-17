@@ -5,14 +5,17 @@ from pathfinding.dijkstra import Dijkstra
 from pathfinding.aStar import AStar
 from pathfinding.greedyBF import GreedyBF
 from pathfinding.idaStar import IdaStar
+from pathfinding.jps import JPS
 
 
 class Node:
-    def __init__(self, origin):
+    def __init__(self, origin, max_size):
         self.origin = origin
         self.visited = False
         self.connections = []
         self.distance = maxsize
+        self.max_size = max_size
+        self.previous_node = None
 
     def __repr__(self) -> str:
         delimiter = ', '
@@ -23,10 +26,9 @@ class Node:
     def __gt__(self, other):
         return self.origin > other.origin
 
-    def add_neighbors(self, origin, map_as_list, nodes: dict, allow_diagonal: bool):
+    def add_neighbors(self, origin, map_as_list, nodes, allow_diagonal):
         '''Lisaa Noden naapurit connections listaan'''
-        
-        max_size = int(sqrt(len(map_as_list)))
+
         x = origin[0]
         y = origin[1]
 
@@ -47,16 +49,20 @@ class Node:
 
         if (x + y) % 2 == 0:
             neighbor_deltas.reverse()
-        
-        neighbor_deltas = list(filter(lambda x: x[0] >= 0 and x[1] >= 0, neighbor_deltas))
-        neighbor_deltas = list(filter(lambda x: x[0] < max_size and x[1] < max_size, neighbor_deltas))
+
+        neighbor_deltas = list(
+            filter(lambda x: (x[0] >= 0 and x[1] >= 0), neighbor_deltas)
+        )
+        neighbor_deltas = list(
+            filter(lambda x: (x[0] < self.max_size and x[1] < self.max_size), neighbor_deltas)
+        )
 
         for coord in neighbor_deltas:
             self.insert_neighbour(
                 coord,
                 map_as_list,
                 nodes,
-                max_size
+                self.max_size
             )
 
     def insert_neighbour(self, coord, map_as_list, nodes, upper_limit):
@@ -68,7 +74,7 @@ class Node:
             if coord in nodes.keys():
                 neighbour_node = nodes[coord]
             else:
-                neighbour_node = Node(coord)
+                neighbour_node = Node(coord, upper_limit)
                 nodes[coord] = neighbour_node
 
             self.connections.append(neighbour_node)
@@ -84,19 +90,25 @@ class Graph:
                 if (x, y) in self.nodes.keys():
                     node = self.nodes[(x, y)]
                 else:
-                    node = Node((x, y))
+                    node = Node((x, y), length)
                     self.nodes[(x, y)] = node
 
-                node.add_neighbors((x, y), map_as_list, self.nodes, allow_diagonal)
+                node.add_neighbors(
+                    (x, y),
+                    map_as_list,
+                    self.nodes,
+                    allow_diagonal
+                )
 
     def clean_up(self):
         for node in self.nodes.values():
             node.distance = maxsize
             node.visited = False
-            try:
-                del node.previous_node
-            except AttributeError:
-                continue
+            node.previous_node = None
+            # try:
+            #     del node.previous_node
+            # except AttributeError:
+            #     continue
 
 
 class PathManager:
@@ -106,6 +118,7 @@ class PathManager:
             "Greedy Best-First": GreedyBF(),
             "A*": AStar(),
             "IDA*": IdaStar(),
+            "JPS": JPS()
         }
         self.diagonal = allow_diagonal
         self.init_graph(map_as_list, allow_diagonal)

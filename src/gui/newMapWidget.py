@@ -52,7 +52,7 @@ class NewMapWidget(QWidget):
 
         try:
             value = int(text)
-            if value < 8 or value > 256:
+            if value < 8 or value > 512:
                 raise ValueError()
             self.new_map_button.setDisabled(False)
             self.infobar.set_message("")

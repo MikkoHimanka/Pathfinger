@@ -1,16 +1,16 @@
 import unittest
 
-from utils.CSVManager import CSVManager
+from utils.FileManager import FileManager
 from pathfinding.pathManager import PathManager
 
 
 class TestDijkstra(unittest.TestCase):
     def setUp(self):
-        self.csv_man = CSVManager()
-        self.simple_map = self.csv_man.open_file(
+        self.file_man = FileManager()
+        self.simple_map = self.file_man.open_file(
             "assets/maps/tests/8x8_simple_map.csv"
         )
-        self.simple_map_wall = self.csv_man.open_file(
+        self.simple_map_wall = self.file_man.open_file(
             "assets/maps/tests/8x8_simple_map_wall.csv"
         )
 
@@ -35,14 +35,12 @@ class TestDijkstra(unittest.TestCase):
         assert (result == correct_path)
 
     def test_dijkstra_dodges_an_obstacle(self):
-        correct_path = [
-            (0, 0), (1, 1), (1, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7)
-        ]
+        correct_path_len = 8
 
         path_man = PathManager(self.simple_map, True)
         result = path_man.get_path("Dijkstra", [(0, 0), (0, 7)])[0]
 
-        self.assertEqual(result, correct_path)
+        self.assertEqual(len(result), correct_path_len)
 
     def test_dijkstra_doesnt_return_full_path_when_failing(self):
         correct_path = []

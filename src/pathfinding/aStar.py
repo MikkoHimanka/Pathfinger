@@ -1,8 +1,17 @@
+from sys import maxsize
 from utils.mathTools import distance, nudge, manhattan_distance
 from heapq import heapify, heappush, heappop
 
+
+class Path:
+    def __init__(self, path, visited, distance):
+        self.path = path
+        self.visited = visited
+        self.distance = distance
+
+
 class AStar:
-    def get_path(self, start_node, end_node, allow_diagonal):
+    def get_path(self, start_node, end_node, allow_diagonal, node_filter=None):
         h = distance if allow_diagonal else manhattan_distance
         start_node.distance = 0
 
@@ -18,13 +27,21 @@ class AStar:
             if node == end_node:
                 break
 
-            for neighbor in node.connections:
+            if node_filter is not None:
+                neighbors = node_filter(node.connections)
+            else:
+                neighbors = node.connections
+
+            for neighbor in neighbors:
                 new_distance = (
                     node.distance +
-                    h(node.origin, neighbor.origin) +
-                    nudge(node.origin, neighbor.origin)
+                    h(node.origin, neighbor.origin)
                 )
+                if node_filter is None:
+                    new_distance += nudge(node.origin, neighbor.origin)
                 if new_distance < neighbor.distance:
+                    if neighbor.distance == maxsize:
+                        visited.append(neighbor.origin)
                     neighbor.distance = new_distance
                     priority = (
                         new_distance +
@@ -32,7 +49,6 @@ class AStar:
                     )
                     heappush(heap, (priority, neighbor))
                     neighbor.previous_node = node
-                    visited.append(neighbor.origin)
 
         resulting_path = []
         current = end_node
@@ -49,4 +65,5 @@ class AStar:
 
         resulting_path.reverse()
 
-        return [resulting_path, visited]
+        # return [resulting_path, visited]
+        return Path(resulting_path, visited, end_node.distance)
