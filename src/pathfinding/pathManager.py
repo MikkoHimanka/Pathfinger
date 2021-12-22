@@ -1,5 +1,6 @@
 from math import sqrt
 from sys import maxsize
+from copy import deepcopy
 
 from pathfinding.dijkstra import Dijkstra
 from pathfinding.aStar import AStar
@@ -65,6 +66,8 @@ class Node:
                 self.max_size
             )
 
+        self.backup = self.connections.copy()
+
     def insert_neighbour(self, coord, map_as_list, nodes, upper_limit):
         map_value = map_as_list[
             (coord[1] * upper_limit) + coord[0]
@@ -100,16 +103,13 @@ class Graph:
                     allow_diagonal
                 )
 
+
     def clean_up(self):
         for node in self.nodes.values():
             node.distance = maxsize
             node.visited = False
             node.previous_node = None
-            # try:
-            #     del node.previous_node
-            # except AttributeError:
-            #     continue
-
+            node.connections = node.backup
 
 class PathManager:
     def __init__(self, map_as_list, allow_diagonal):
@@ -141,4 +141,5 @@ class PathManager:
             self.graph.allow_diagonal
         )
         self.graph.clean_up()
+        
         return result

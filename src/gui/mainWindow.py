@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.gui_manager = GUIManager()
+        self.gui_manager = GUIManager(self)
         self.data_manager = DataManager()
         self.setWindowTitle("Pathfinger")
         self.setMinimumWidth(700)

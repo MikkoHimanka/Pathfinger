@@ -1,4 +1,7 @@
+from heapq import heapify, heappop, heappush
 from utils.mathTools import distance, manhattan_distance
+
+from pathfinding.path import Path
 
 from sys import maxsize
 
@@ -22,6 +25,8 @@ class IdaStar:
         self.h = distance if allow_diagonal else manhattan_distance
         self.start_node = start_node
         self.end_node = end_node
+        self.time = None
+        self.memory = None
 
         self.path.append(start_node)
         h_score = self.get_h_score(start_node)
@@ -42,12 +47,13 @@ class IdaStar:
             return -1
         minimum = maxsize
 
-        neighbors = sorted(
-            node.connections.copy(),
-            key=lambda x: g_score + self.get_h_score(x)
-        )
+        neighbors = []
+        heapify(neighbors)
+        for n in node.connections:
+            heappush(neighbors, (g_score + self.get_h_score(n), n))
 
-        for neighbor in neighbors:
+        while len(neighbors) > 0:
+            neighbor = heappop(neighbors)[1]
             if neighbor not in self.path:
                 self.path.append(neighbor)
                 t_score = self.search(
@@ -67,4 +73,4 @@ class IdaStar:
         for node in self.path:
             resulting_path.append(node.origin)
 
-        return [resulting_path, self.visited]
+        return Path(resulting_path, self.visited, self.time, self.memory)

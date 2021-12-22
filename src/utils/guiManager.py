@@ -4,11 +4,13 @@ from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from gui.mapEditor import MapEditor
 from gui.pathViewer import PathViewer
+from gui.benchmark import BenchmarkWindow
 from gui.sidebar import EditorSidebar, PathSidebar
 
 
 class GUIManager:
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.infobar = Infobar()
         self.init_layout()
         self.show_visited = True
@@ -55,3 +57,10 @@ class GUIManager:
 
     def get_widget(self, index):
         return self.child_layout.itemAt(index).widget()
+
+    def handle_benchmark(self):
+        self.benchmark_window = BenchmarkWindow(self)
+        self.benchmark_window.show()
+
+    def start_benchmark(self):
+        self.get_widget(0).select_points()

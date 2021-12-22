@@ -1,7 +1,7 @@
 from math import sqrt
 
 from PyQt6.QtGui import QPixmap, qRgb
-from PyQt6.QtWidgets import QLabel, QSizePolicy
+from PyQt6.QtWidgets import QLabel, QSizePolicy, QWidget
 from PyQt6.QtCore import QThread, Qt
 
 from gui.renderWorker import RenderWorker
@@ -21,9 +21,10 @@ class MapEntity(QLabel):
         self.infobar = gui_manager.infobar
         self.data_manager = data_manager
         self.map = data_manager.current_map
-        self.render_map()
 
     def restore_image(self):
+        self.render_worker.path_nodes = []
+        self.render_worker.visited = []
         self.data_manager.clear_path()
 
     def render_map(self):
@@ -32,7 +33,6 @@ class MapEntity(QLabel):
         self.render_worker = RenderWorker(
             self.map,
             self.data_manager.current_path,
-            self.data_manager.current_visited,
             self.gui_manager.speed
         )
         self.render_worker.moveToThread(self.render_thread)
@@ -65,6 +65,7 @@ class MapEntity(QLabel):
         """Kutsuu skaalausfunktiota, kun ikkunan kokoa muutetaan"""
         if self.image is not None:
             self.scale_pixmap(self.pixmap)
+        QWidget.resizeEvent(self, e)
 
     def unscale_position(self, position):
         """Palauttaa vastaavat koordinaatit skaalaamattomalla kuvalla"""

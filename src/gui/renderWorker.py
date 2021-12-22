@@ -18,12 +18,15 @@ class RenderWorker(QObject):
     finished = pyqtSignal()
     image_signal = pyqtSignal(QImage)
 
-    def __init__(self, map_as_list, path, visited, speed, index=0):
+    def __init__(self, map_as_list, path, speed, index=0):
         super().__init__()
         self.image = self.image_from_list(map_as_list)
-        self.path = path
-        self.visited = visited
-        if len(visited) > 0:
+        self.path_nodes = []
+        self.visited = []
+        if path is not None:
+            self.path_nodes = path.path
+            self.visited = path.visited
+        if len(self.visited) > 0:
             visited_amounts = Counter(self.visited)
             self.max_visited_amount = max(visited_amounts.values())
         self.speed = speed
@@ -33,13 +36,13 @@ class RenderWorker(QObject):
         self.image_signal.emit(self.image)
 
         while self.i < len(self.visited):
-            # self.set_pixel(self.visited[self.i], "yellow")
-            self.lighten_pixel(self.visited[self.i])
+            self.set_pixel(self.visited[self.i], "yellow")
+            # self.lighten_pixel(self.visited[self.i])
             self.image_signal.emit(self.image)
             sleep(self.speed / 1000)
             self.i += 1
 
-        self.set_pixels(self.path, "green")
+        self.set_pixels(self.path_nodes, "green")
         self.image_signal.emit(self.image)
 
         self.finished.emit()

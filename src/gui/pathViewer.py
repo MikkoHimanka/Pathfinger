@@ -10,23 +10,25 @@ class PathViewer(MapEntity):
         super().__init__(gui_manager, data_manager)
         self.data_manager.init_graph()
         self.current_algorithm = ""
-        self.selection_active = False
+        self.algo_selection_active = False
         self.points_selected = False
         self.points = [(-1, -1), (-1, -1)]
         self.painter = QPainter()
+        self.render_map()
 
-    def select_points(self, algorithm):
+    def select_points(self, algorithm=None):
         self.restore_image()
-        self.data_manager.clear_path()
-        self.current_algorithm = algorithm
+        self.render_map()
         self.points = [(-1, -1), (-1, -1)]
+        self.current_algorithm = None
+        if algorithm is not None:
+            self.current_algorithm = algorithm
         self.points_selected = False
-
         self.infobar.set_message("Select starting point")
-        self.selection_active = True
+        self.algo_selection_active = True
 
     def mousePressEvent(self, e):  # noqa: N802
-        if self.selection_active:
+        if self.algo_selection_active:
             mouse_position = (e.position().x(), e.position().y())
             if self.points[0] == (-1, -1):
                 self.points[0] = self.unscale_position(mouse_position)
@@ -34,9 +36,12 @@ class PathViewer(MapEntity):
             elif self.points[1] == (-1, -1):
                 self.points[1] = self.unscale_position(mouse_position)
                 self.infobar.clear()
-                self.selection_active = False
+                self.algo_selection_active = False
                 self.points_selected = True
-                self.data_manager.set_path(
-                    self.current_algorithm, self.points
-                )
-                self.render_map()
+                if self.current_algorithm is not None:
+                    self.data_manager.set_path(
+                        self.current_algorithm, self.points
+                    )
+                    self.render_map()
+                else:
+                    self.data_manager.run_benchmark(self.points)

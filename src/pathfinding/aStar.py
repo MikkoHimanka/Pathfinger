@@ -2,17 +2,14 @@ from sys import maxsize
 from utils.mathTools import distance, nudge, manhattan_distance
 from heapq import heapify, heappush, heappop
 
-
-class Path:
-    def __init__(self, path, visited, distance):
-        self.path = path
-        self.visited = visited
-        self.distance = distance
+from pathfinding.path import Path
 
 
 class AStar:
     def get_path(self, start_node, end_node, allow_diagonal, node_filter=None):
         h = distance if allow_diagonal else manhattan_distance
+        time = None
+        memory = None
         start_node.distance = 0
 
         heap = []
@@ -23,7 +20,7 @@ class AStar:
 
         while len(heap) > 0:
             node = heappop(heap)[1]
-
+            visited.append(node.origin)
             if node == end_node:
                 break
 
@@ -40,8 +37,6 @@ class AStar:
                 if node_filter is None:
                     new_distance += nudge(node.origin, neighbor.origin)
                 if new_distance < neighbor.distance:
-                    if neighbor.distance == maxsize:
-                        visited.append(neighbor.origin)
                     neighbor.distance = new_distance
                     priority = (
                         new_distance +
@@ -66,4 +61,4 @@ class AStar:
         resulting_path.reverse()
 
         # return [resulting_path, visited]
-        return Path(resulting_path, visited, end_node.distance)
+        return Path(resulting_path, visited, time, memory)

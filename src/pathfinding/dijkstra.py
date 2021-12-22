@@ -2,10 +2,14 @@ from collections import deque
 
 from utils.mathTools import distance, manhattan_distance
 
+from pathfinding.path import Path
+
 
 class Dijkstra:
     def get_path(self, start_node, end_node, allow_diagonal):
         h = distance if allow_diagonal else manhattan_distance
+        time = None
+        memory = None
         start_node.distance = 0
 
         queue = deque()
@@ -48,4 +52,4 @@ class Dijkstra:
 
         resulting_path.reverse()
 
-        return [resulting_path, visited_points]
+        return Path(resulting_path, visited_points, time, memory)

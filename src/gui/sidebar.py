@@ -2,6 +2,8 @@ import PyQt6
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import QCheckBox, QComboBox, QFormLayout, QLabel, QPushButton, QSlider, QWidget
 
+from gui.pathViewer import PathViewer
+
 
 class EditorSidebar(QWidget):
     def __init__(self, gui_manager):
@@ -55,9 +57,9 @@ class PathSidebar(QWidget):
             )
         )
 
-        allow_diagonal = QCheckBox("Allow diagonal movement")
-        allow_diagonal.stateChanged.connect(
-            lambda: self.window().data_manager.set_diagonal(allow_diagonal.isChecked())
+        self.allow_diagonal = QCheckBox("Allow diagonal movement")
+        self.allow_diagonal.stateChanged.connect(
+            lambda: self.window().data_manager.set_diagonal(self.allow_diagonal.isChecked())
         )
 
         speed_slider = QSlider(PyQt6.QtCore.Qt.Orientation.Horizontal)
@@ -69,13 +71,17 @@ class PathSidebar(QWidget):
             self.change_speed
         )
 
+        benchmark_button = QPushButton("Benchmark")
+        benchmark_button.clicked.connect(self.gui_manager.handle_benchmark)
+
         layout = QFormLayout()
         layout.addRow(QLabel("Path finding"))
         layout.addRow(path_view_button)
         layout.addRow(algo_select_dropdown)
         layout.addRow(find_path_button)
-        layout.addRow(allow_diagonal)
+        layout.addRow(self.allow_diagonal)
         layout.addRow(speed_slider)
+        layout.addRow(benchmark_button)
 
         self.setLayout(layout)
 
@@ -87,7 +93,16 @@ class PathSidebar(QWidget):
         select_algo_menu.addItem("IDA*")
         select_algo_menu.addItem("JPS")
 
+        select_algo_menu.currentTextChanged.connect(self.handle_algo_select)
+
         return select_algo_menu
 
     def change_speed(self, value):
         self.gui_manager.speed = abs(value)
+
+    def handle_algo_select(self, value):
+        if value == "JPS":
+            self.allow_diagonal.setChecked(True)
+            self.allow_diagonal.hide()
+        else:
+            self.allow_diagonal.show()
