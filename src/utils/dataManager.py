@@ -2,8 +2,6 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from pathfinding.pathManager import PathManager
 from utils.FileManager import FileManager
 
-from time import time_ns
-
 
 class DataManager(QObject):
     dictUpdated = pyqtSignal(dict)
@@ -56,7 +54,5 @@ class DataManager(QObject):
         self.clear_path()
         for algo in algorithms:
             self.path_manager.init_graph(self.current_map, True)
-            time_start = time_ns()
             self.benchmark_results[algo] = self.path_manager.get_path(algo, points)
-            self.benchmark_results[algo].time = time_ns() - time_start
             self.dictUpdated.emit(self.benchmark_results)

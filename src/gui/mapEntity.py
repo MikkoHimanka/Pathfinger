@@ -2,7 +2,7 @@ from math import sqrt
 
 from PyQt6.QtGui import QPixmap, qRgb
 from PyQt6.QtWidgets import QLabel, QSizePolicy, QWidget
-from PyQt6.QtCore import QThread, Qt
+from PyQt6.QtCore import QThread, Qt, pyqtSignal
 
 from gui.renderWorker import RenderWorker
 
@@ -21,10 +21,11 @@ class MapEntity(QLabel):
         self.infobar = gui_manager.infobar
         self.data_manager = data_manager
         self.map = data_manager.current_map
+        self.render_thread = None
 
     def restore_image(self):
-        self.render_worker.path_nodes = []
-        self.render_worker.visited = []
+        self.render_worker.visited.clear()
+        self.render_worker.path_nodes.clear()
         self.data_manager.clear_path()
 
     def render_map(self):

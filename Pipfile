@@ -4,7 +4,8 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [packages]
-PyQt6 = "6.2.1"
+PyQt6 = "6.2.2"
+PyQt6-Charts = "6.2.0"
 
 [dev-packages]
 pytest = "6.2.5"

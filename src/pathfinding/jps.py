@@ -1,7 +1,7 @@
 from sys import maxsize
 from heapq import heapify, heappush, heappop
 from utils.mathTools import distance
-
+from time import time_ns
 from pathfinding.path import Path
 
 
@@ -30,7 +30,7 @@ class Filter:
 
 class JPS:
     def get_path(self, start_node, end_node, allow_diagonal):
-        time = None
+        time_start = time_ns()
         memory = None
         self.distances = {}
         self.distances[start_node] = 0
@@ -47,7 +47,7 @@ class JPS:
         while len(heap) > 0:
             node = heappop(heap)[1]
 
-            visited.append(node.origin)    
+            visited.append(node.origin)
             successors = self.identify_successors(node, end_node)
 
             for successor in successors:
@@ -61,6 +61,8 @@ class JPS:
                     heap.clear()
                     break
                 heappush(heap, (priority, successor))
+
+        time = time_ns() - time_start
 
         resulting_path = []
         current = end_node.origin

@@ -18,7 +18,6 @@ class PathViewer(MapEntity):
 
     def select_points(self, algorithm=None):
         self.restore_image()
-        self.render_map()
         self.points = [(-1, -1), (-1, -1)]
         self.current_algorithm = None
         if algorithm is not None:

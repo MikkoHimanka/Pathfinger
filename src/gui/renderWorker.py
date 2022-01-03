@@ -9,7 +9,7 @@ from collections import Counter
 COLORS = {
     "0": qRgb(0, 0, 0),
     "1": qRgb(255, 100, 100),
-    "yellow": qRgb(170, 170, 50),
+    "yellow": qRgb(90, 90, 20),
     "green": qRgb(0, 200, 0),
 }
 
@@ -18,7 +18,7 @@ class RenderWorker(QObject):
     finished = pyqtSignal()
     image_signal = pyqtSignal(QImage)
 
-    def __init__(self, map_as_list, path, speed, index=0):
+    def __init__(self, map_as_list, path, speed):
         super().__init__()
         self.image = self.image_from_list(map_as_list)
         self.path_nodes = []
@@ -30,17 +30,18 @@ class RenderWorker(QObject):
             visited_amounts = Counter(self.visited)
             self.max_visited_amount = max(visited_amounts.values())
         self.speed = speed
-        self.i = index
+
+    def set_stop(self, value):
+        self.stop = value
 
     def run(self):
         self.image_signal.emit(self.image)
 
-        while self.i < len(self.visited):
-            self.set_pixel(self.visited[self.i], "yellow")
+        for i in self.visited:
+            self.set_pixel(i, "yellow")
             # self.lighten_pixel(self.visited[self.i])
             self.image_signal.emit(self.image)
             sleep(self.speed / 1000)
-            self.i += 1
 
         self.set_pixels(self.path_nodes, "green")
         self.image_signal.emit(self.image)

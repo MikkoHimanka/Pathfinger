@@ -1,4 +1,5 @@
 from collections import deque
+from time import time_ns
 
 from utils.mathTools import distance, manhattan_distance
 
@@ -7,8 +8,8 @@ from pathfinding.path import Path
 
 class Dijkstra:
     def get_path(self, start_node, end_node, allow_diagonal):
+        time_start = time_ns()
         h = distance if allow_diagonal else manhattan_distance
-        time = None
         memory = None
         start_node.distance = 0
 
@@ -36,6 +37,8 @@ class Dijkstra:
                 neighbour.distance = new_distance
                 neighbour.previous_node = node
                 queue.append(neighbour)
+
+        time = time_ns() - time_start
 
         resulting_path = []
         current = end_node

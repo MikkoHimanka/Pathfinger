@@ -90,7 +90,7 @@ class PathSidebar(QWidget):
         select_algo_menu.addItem("Dijkstra")
         select_algo_menu.addItem("Greedy Best-First")
         select_algo_menu.addItem("A*")
-        select_algo_menu.addItem("IDA*")
+        # select_algo_menu.addItem("IDA*")
         select_algo_menu.addItem("JPS")
 
         select_algo_menu.currentTextChanged.connect(self.handle_algo_select)

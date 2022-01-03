@@ -1,4 +1,5 @@
 from utils.mathTools import distance, manhattan_distance
+from time import time_ns
 
 from pathfinding.path import Path
 
@@ -41,8 +42,8 @@ class KeyOrderedDict:
 
 class GreedyBF:
     def get_path(self, start_node, end_node, allow_diagonal):
+        time_start = time_ns()
         h = distance if allow_diagonal else manhattan_distance
-        time = None
         memory = None
 
         start_node.distance = 0
@@ -54,6 +55,7 @@ class GreedyBF:
 
         while len(queue) > 0:
             node = queue.popleft()
+            visited_points.append(node.origin)
 
             if node == end_node:
                 break
@@ -66,10 +68,11 @@ class GreedyBF:
                     continue
                 neighbor.distance = new_distance
                 neighbor.previous_node = node
-                visited_points.append(neighbor.origin)
 
                 neighbour_to_goal = h(neighbor.origin, end_node.origin)
                 queue[neighbour_to_goal] = neighbor
+
+        time = time_ns() - time_start
 
         resulting_path = []
         current = end_node
